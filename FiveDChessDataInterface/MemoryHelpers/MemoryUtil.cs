@@ -100,6 +100,10 @@ namespace FiveDChessDataInterface.MemoryHelpers
             byte[] bytesToWrite = null;
             switch (Type.GetTypeCode(t))
             {
+                case TypeCode.Byte:
+
+                    bytesToWrite = new byte[1] { (byte)(object)newValue }; ;
+                    break;
                 case TypeCode.Int16:
                 case TypeCode.Int32:
                 case TypeCode.Int64:
@@ -108,7 +112,8 @@ namespace FiveDChessDataInterface.MemoryHelpers
                 case TypeCode.UInt64:
                 case TypeCode.Single:
                 case TypeCode.Double:
-                    bytesToWrite = BitConverter.GetBytes((dynamic)newValue); break;
+                    bytesToWrite = BitConverter.GetBytes((dynamic)newValue);
+                    break;
 
                 case TypeCode.Object:
                     switch (t.FullName)
