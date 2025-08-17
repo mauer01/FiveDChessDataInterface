@@ -4,22 +4,18 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace FiveDChessDataInterface.MemoryHelpers
-{
-    public static class MemoryUtil
-    {
+namespace FiveDChessDataInterface.MemoryHelpers{
+    public static class MemoryUtil{
         [Obsolete("use the overload which accepts byte?[] as a paramter instead!")]
         private static Dictionary<IntPtr, byte[]> FindMemoryInternal(IntPtr gameHandle, IntPtr start, uint length, byte[] bytesToFind, bool treatNop90AsWildcard)
             => FindMemoryInternal(gameHandle, start, length, bytesToFind.Select(x => (treatNop90AsWildcard && x == 0x90) ? (byte?)null : x).ToArray());
 
-        private static Dictionary<IntPtr, byte[]> FindMemoryInternal(IntPtr gameHandle, IntPtr start, uint length, byte?[] bytesToFind)
-        {
+        private static Dictionary<IntPtr, byte[]> FindMemoryInternal(IntPtr gameHandle, IntPtr start, uint length, byte?[] bytesToFind){
             var foundElements = new Dictionary<IntPtr, byte[]>();
 
             var bytes = KernelMethods.ReadMemory(gameHandle, start, length);
 
-            for (int basePos = 0; basePos < bytes.Length - bytesToFind.Length; basePos++)
-            {
+            for (int basePos = 0; basePos < bytes.Length - bytesToFind.Length; basePos++){
                 bool found = true;
                 for (int i = 0; i < bytesToFind.Length; i++)
                 {
@@ -53,13 +49,11 @@ namespace FiveDChessDataInterface.MemoryHelpers
             => FindMemoryInternal(gameHandle, start, length, bytesToFind);
 
 
-        public static T ReadValue<T>(IntPtr gameHandle, IntPtr location)
-        {
+        public static T ReadValue<T>(IntPtr gameHandle, IntPtr location){
             var bytes = KernelMethods.ReadMemory(gameHandle, location, (uint)Marshal.SizeOf<T>());
             var t = typeof(T);
 
-            switch (Type.GetTypeCode(t))
-            {
+            switch (Type.GetTypeCode(t)){
                 case TypeCode.Byte:
                     return (dynamic)bytes[0];
 
@@ -94,12 +88,13 @@ namespace FiveDChessDataInterface.MemoryHelpers
             }
         }
 
-        public static void WriteValue<T>(IntPtr handle, IntPtr location, T newValue)
-        {
+        public static void WriteValue<T>(IntPtr handle, IntPtr location, T newValue){
             var t = typeof(T);
             byte[] bytesToWrite = null;
-            switch (Type.GetTypeCode(t))
-            {
+            switch (Type.GetTypeCode(t)){
+                case TypeCode.Byte:
+                    bytesToWrite = new byte[1] { (byte)(object)newValue }; ;
+                    break;
                 case TypeCode.Int16:
                 case TypeCode.Int32:
                 case TypeCode.Int64:
@@ -108,27 +103,29 @@ namespace FiveDChessDataInterface.MemoryHelpers
                 case TypeCode.UInt64:
                 case TypeCode.Single:
                 case TypeCode.Double:
-                    bytesToWrite = BitConverter.GetBytes((dynamic)newValue); break;
-
+                    bytesToWrite = BitConverter.GetBytes((dynamic)newValue);
+                    break;
                 case TypeCode.Object:
-                    switch (t.FullName)
-                    {
+                    switch (t.FullName){
                         case "System.IntPtr":
                             bytesToWrite = BitConverter.GetBytes(((IntPtr)(object)newValue).ToInt64()); break;
+                        case "System.Int32[]":
+                            var intArray = (int[])(object)newValue;
+                            for (int i = 0; i < intArray.Count(); i++)
+                            {
+                                KernelMethods.WriteMemory(handle, location + (i * 4), BitConverter.GetBytes(intArray[i]));
+                            }
+                            return;
                         default:
                             throw new NotImplementedException("Invalid obj type");
                     }
                     break;
-
                 default:
                     throw new NotImplementedException("Invalid type");
             }
-
             KernelMethods.WriteMemory(handle, location, bytesToWrite);
         }
-
-        public static IntPtr LoadFunctionIntoMemory(string assembly, string functionName)
-        {
+        public static IntPtr LoadFunctionIntoMemory(string assembly, string functionName){
             var handle = KernelMethods.LoadLibrary(assembly);
             return KernelMethods.GetProcAddress(handle, functionName);
         }
