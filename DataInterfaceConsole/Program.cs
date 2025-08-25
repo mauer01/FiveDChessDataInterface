@@ -1,5 +1,6 @@
 ﻿using DataInterfaceConsole.Actions;
 using DataInterfaceConsole.Actions.Settings;
+using DataInterfaceConsole.Actions.TriggersAndFleetingOptions;
 using DataInterfaceConsole.Types;
 using DataInterfaceConsole.Types.Exceptions;
 using FiveDChessDataInterface;
@@ -17,6 +18,8 @@ namespace DataInterfaceConsole
         public DataInterface di;
         public SettingsHandler sh;
 
+        public OptionsHandler oh;
+
         static void Main()
         {
             ConsoleNonBlocking.Init();
@@ -28,7 +31,7 @@ namespace DataInterfaceConsole
         {
             Console.WriteLine("Some output will occasionally be provided via the console title.");
             this.sh = SettingsHandler.LoadOrCreateNew();
-
+            this.oh = OptionsHandler.LoadOrCreateNew();
             this.backgroundThread = new Thread(BackgroundThreadRun)
             {
                 Name = "BackgroundThread"
