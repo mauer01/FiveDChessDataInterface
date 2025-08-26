@@ -1,4 +1,5 @@
 ﻿using DataInterfaceConsole.Actions.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +23,7 @@ namespace DataInterfaceConsole.Actions.TriggersAndFleetingOptions
         {
             AddOption(new SettingsValueWhitelisted<string>("UndoSubmittedMoves", "Undo Submitted Moves", "unlocks the ability to Undo submitted moves in Single/Local Games",
                 new[] { "on", "off" }, "off"));
+            AddOption(new SettingsValuePrimitive<string>("PasteLobbyCode", "paste the lobby code", "auto inserts the lobby code of a private match", ""));
 
         }
 
@@ -33,12 +35,34 @@ namespace DataInterfaceConsole.Actions.TriggersAndFleetingOptions
                 case "UndoSubmittedMoves":
                     di.MemLocUndoMoveReducedByValue.SetValue((byte)(changedOption.GetValueAsString() == "off" ? 0xFF : 0x00));
                     break;
+                case "PasteLobbyCode":
+                    string[] pieceMap = new string[]
+                        {
+                        ":pawn_white:",
+                        ":knight_white:",
+                        ":bishop_white:",
+                        ":rook_white:",
+                        ":queen_white:",
+                        ":king_white:",
+                        ":pawn_black:",
+                        ":knight_black:",
+                        ":bishop_black:",
+                        ":rook_black:",
+                        ":queen_black:",
+                        ":king_black:"
+                        };
+                    string[] value = changedOption.GetValueAsString().Trim().Replace("\\", "").Replace("\"", "").Split(" ");
+                    int[] newValue = value.Select((curVal) =>
+                    {
+                        return Array.IndexOf(pieceMap, curVal);
+                    }).Append(6).ToArray();
+                    di.joiningRoomCodeArray.SetValue(newValue);
+                    break;
             }
         }
-        public static OptionsHandler LoadOrCreateNew()
+        public static OptionsHandler CreateNew()
         {
-            var oh = new OptionsHandler();
-            return oh;
+            return new OptionsHandler();
         }
     }
 }
