@@ -31,7 +31,7 @@ namespace DataInterfaceConsole
         {
             Console.WriteLine("Some output will occasionally be provided via the console title.");
             this.sh = SettingsHandler.LoadOrCreateNew();
-            this.oh = OptionsHandler.LoadOrCreateNew();
+            this.oh = OptionsHandler.CreateNew();
             this.backgroundThread = new Thread(BackgroundThreadRun)
             {
                 Name = "BackgroundThread"
