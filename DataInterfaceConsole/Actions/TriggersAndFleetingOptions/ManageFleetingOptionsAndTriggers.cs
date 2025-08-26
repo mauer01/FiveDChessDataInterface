@@ -15,7 +15,6 @@ namespace DataInterfaceConsole.Actions
             var options = Program.instance.oh.GetOptions();
             var width = (int)Math.Log10(options.Length) + 1;
             WriteLineIndented(options.SelectMany((s, i) => $"[{(i + 1).ToString().PadLeft(width)}] {s.Name}: {s.Description}\n\tCurrent value: {s.GetValueAsString()}".Split("\n")));
-            WriteLineIndented(options.SelectMany((s, i) => $"[{(i + 1).ToString().PadLeft(width)}] {s.Name}: {s.Description}\n\tCurrent value: {s.GetValueAsString()}".Split("\n")));
 
             if (int.TryParse(ConsoleNonBlocking.ReadLineBlocking(), out int input) && input > 0 && input <= options.Length)
             {
@@ -54,6 +53,13 @@ namespace DataInterfaceConsole.Actions
                         WriteLineIndented("Invalid input format. Setting was left unchanged.", 2);
                         return;
                     }
+                }
+                else if (chosenSetting is SettingsValuePrimitive<string> sv3)
+                {
+                    WriteLineIndented($"Please enter the new Data:");
+                    var str = ConsoleNonBlocking.ReadLineBlocking();
+                    sv3.SetPrimitive(str);
+
                 }
                 else
                 {
