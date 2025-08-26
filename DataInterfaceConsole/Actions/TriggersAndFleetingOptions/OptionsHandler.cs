@@ -56,7 +56,7 @@ namespace DataInterfaceConsole.Actions.TriggersAndFleetingOptions
                     {
                         return Array.IndexOf(pieceMap, curVal);
                     }).Append(6).ToArray();
-                    di.joiningRoomCodeArray.SetValue(newValue);
+                    di.JoiningRoomCodeArray.SetValue(newValue);
                     break;
             }
         }
