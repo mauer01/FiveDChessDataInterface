@@ -120,6 +120,13 @@ namespace FiveDChessDataInterface.MemoryHelpers
                     {
                         case "System.IntPtr":
                             bytesToWrite = BitConverter.GetBytes(((IntPtr)(object)newValue).ToInt64()); break;
+                        case "System.Int32[]":
+                            var intArray = (int[])(object)newValue;
+                            for (int i = 0; i < intArray.Count(); i++)
+                            {
+                                KernelMethods.WriteMemory(handle, location + (i * 4), BitConverter.GetBytes(intArray[i]));
+                            }
+                            return;
                         default:
                             throw new NotImplementedException("Invalid obj type");
                     }
