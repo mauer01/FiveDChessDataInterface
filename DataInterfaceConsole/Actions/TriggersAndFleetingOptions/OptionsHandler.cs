@@ -24,7 +24,7 @@ namespace DataInterfaceConsole.Actions.TriggersAndFleetingOptions
             AddOption(new SettingsValueWhitelisted<string>("UndoSubmittedMoves", "Undo Submitted Moves", "unlocks the ability to Undo submitted moves in Single/Local Games",
                 new[] { "on", "off" }, "off"));
             AddOption(new SettingsValuePrimitive<string>("PasteLobbyCode", "paste the lobby code", "auto inserts the lobby code of a private match", ""));
-
+            AddOption(new SettingsValuePrimitive<Trigger>("ResumeGame", "Resumes finished Games", "Changes values so that the game can be resumed even though it already ended", new Trigger()));
         }
 
         public void WriteOptionIntoMemory(ISettingsValue changedOption)
@@ -57,6 +57,13 @@ namespace DataInterfaceConsole.Actions.TriggersAndFleetingOptions
                         return Array.IndexOf(pieceMap, curVal);
                     }).Append(6).ToArray();
                     di.JoiningRoomCodeArray.SetValue(newValue);
+                    break;
+                case "ResumeGame":
+                    var a = new[] { di.FinishGameButton, di.EndOfGameDesc, di.BackgroundColorChange, di.PropertyAtEndOfGame };
+                    foreach (var curItem in a)
+                    {
+                        curItem.SetValue(0);
+                    }
                     break;
             }
         }

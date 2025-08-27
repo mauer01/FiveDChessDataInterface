@@ -1,4 +1,5 @@
 using DataInterfaceConsole.Actions.Settings;
+using DataInterfaceConsole.Actions.TriggersAndFleetingOptions;
 using DataInterfaceConsole.Types;
 using System;
 using System.Linq;
@@ -61,6 +62,7 @@ namespace DataInterfaceConsole.Actions
                     sv3.SetPrimitive(str);
 
                 }
+                else if (chosenSetting is SettingsValuePrimitive<Trigger> sv4) { }
                 else
                 {
                     throw new NotImplementedException("This setting type has not been implemented yet!");
