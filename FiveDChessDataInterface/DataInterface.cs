@@ -61,6 +61,12 @@ namespace FiveDChessDataInterface
 
         public MemoryLocation<byte> MemLocUndoMoveReducedByValue { get; private set; }
         public MemoryLocation<int[]> JoiningRoomCodeArray { get; private set; }
+        public MemoryLocation<int> EndOfGameDesc { get; private set; }
+        public MemoryLocation<int> FinishGameButton { get; private set; }
+        public MemoryLocation<int> BackgroundColorChange { get; private set; } //This changes the Background Color sometimes when end of game is reached
+        public MemoryLocation<int> PropertyAtEndOfGame { get; private set; } //this changes at end of game for some reason, not sure yet.
+
+
         public MemoryLocation<int> MemLocCosmeticTurnOffset { get; private set; }
 
 
@@ -233,6 +239,10 @@ namespace FiveDChessDataInterface
             this.MemLocTimeTravelAnimationEnabled = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0x3E8);
             this.MemLocUndoMoveReducedByValue = new MemoryLocation<byte>(GetGameHandle(), chessboardPointerLocation - 0xE8A23);
             this.JoiningRoomCodeArray = new MemoryLocation<int[]>(GetGameHandle(), chessboardPointerLocation - 0xF8);
+            this.FinishGameButton = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0xC8);
+            this.EndOfGameDesc = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0xD0);
+            this.BackgroundColorChange = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0x3DC);
+            this.PropertyAtEndOfGame = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0xD4);
             // set to -1 for even starting timeline cnt, and to 0 for odd starting timeline cnt
             this.MemLocTimelineValueOffset = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, -0x34);
             this.MemLocWhiteTimelineCountInternal = new MemoryLocation<uint>(GetGameHandle(), chessboardPointerLocation, -0x30);
