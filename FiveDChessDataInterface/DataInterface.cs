@@ -56,6 +56,15 @@ namespace FiveDChessDataInterface {
         public MemoryLocation<int> MemLocTimeTravelAnimationEnabled { get; private set; }
 
         [RequiredForSave("CosmeticTurnOffset")]
+
+        public MemoryLocation<byte> MemLocUndoMoveReducedByValue { get; private set; }
+        public MemoryLocation<int[]> JoiningRoomCodeArray { get; private set; }
+        public MemoryLocation<int> EndOfGameDesc { get; private set; }
+        public MemoryLocation<int> FinishGameButton { get; private set; }
+        public MemoryLocation<int> BackgroundColorChange { get; private set; } //This changes the Background Color sometimes when end of game is reached
+        public MemoryLocation<int> PropertyAtEndOfGame { get; private set; } //this changes at end of game for some reason, not sure yet.
+
+
         public MemoryLocation<int> MemLocCosmeticTurnOffset { get; private set; }
 
 
@@ -222,7 +231,12 @@ namespace FiveDChessDataInterface {
             MemLocWhiteIncrement = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0x1B0);
             MemLocBlackIncrement = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0x1B4);
             MemLocTimeTravelAnimationEnabled = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0x3E8);
-
+            MemLocUndoMoveReducedByValue = new MemoryLocation<byte>(GetGameHandle(), chessboardPointerLocation - 0xE8A23);
+            JoiningRoomCodeArray = new MemoryLocation<int[]>(GetGameHandle(), chessboardPointerLocation - 0xF8);
+            FinishGameButton = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0xC8);
+            EndOfGameDesc = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0xD0);
+            BackgroundColorChange = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0x3DC);
+            PropertyAtEndOfGame = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, 0xD4);
             // set to -1 for even starting timeline cnt, and to 0 for odd starting timeline cnt
             MemLocTimelineValueOffset = new MemoryLocation<int>(GetGameHandle(), chessboardPointerLocation, -0x34);
             MemLocWhiteTimelineCountInternal = new MemoryLocation<uint>(GetGameHandle(), chessboardPointerLocation, -0x30);
