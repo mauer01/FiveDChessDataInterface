@@ -1,4 +1,4 @@
-﻿using DataInterfaceConsole.Actions.EphermalSettings;
+﻿using DataInterfaceConsole.Actions.EphemeralSettings;
 using DataInterfaceConsole.Actions.Settings;
 using DataInterfaceConsole.Types;
 using System;

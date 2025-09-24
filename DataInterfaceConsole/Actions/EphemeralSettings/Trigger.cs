@@ -1,6 +1,6 @@
 using System;
 
-namespace DataInterfaceConsole.Actions.EphermalSettings;
+namespace DataInterfaceConsole.Actions.EphemeralSettings;
 public class Trigger {
     private readonly Action action;
 
