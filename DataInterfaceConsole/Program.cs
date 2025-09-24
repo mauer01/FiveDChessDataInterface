@@ -1,6 +1,6 @@
 ﻿using DataInterfaceConsole.Actions;
+using DataInterfaceConsole.Actions.EphermalSettings;
 using DataInterfaceConsole.Actions.Settings;
-using DataInterfaceConsole.Actions.TriggersAndFleetingOptions;
 using DataInterfaceConsole.Types;
 using DataInterfaceConsole.Types.Exceptions;
 using FiveDChessDataInterface;
@@ -15,11 +15,10 @@ internal class Program {
     internal static Program instance = new Program();
     private Thread backgroundThread;
     public DataInterface di;
-    public SettingsHandler sh;
-    public OptionsHandler oh;
+    public PersistentSettingsContainer sh;
+    public EphermalSettingsContainer eh;
 
-    private static void Main()
-    {
+    private static void Main() {
         ConsoleNonBlocking.Init();
         Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         instance.Run();
@@ -27,8 +26,8 @@ internal class Program {
 
     private void Run() {
         Console.WriteLine("Some output will occasionally be provided via the console title.");
-        this.sh = SettingsHandler.LoadOrCreateNew();
-        this.oh = OptionsHandler.CreateNew();
+        this.sh = PersistentSettingsContainer.LoadOrCreateNew();
+        this.eh = new EphermalSettingsContainer();
 
         this.backgroundThread = new Thread(BackgroundThreadRun) {
             Name = "BackgroundThread"

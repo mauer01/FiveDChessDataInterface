@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FiveDChessDataInterface.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -101,16 +102,13 @@ namespace FiveDChessDataInterface.MemoryHelpers {
                     bytesToWrite = BitConverter.GetBytes((dynamic)newValue);
                     break;
                 case TypeCode.Object:
-                    switch (t.FullName) {
-                        case "System.IntPtr":
-                            bytesToWrite = BitConverter.GetBytes(((IntPtr)(object)newValue).ToInt64()); break;
-                        case "System.Int32[]":
-                            var intArray = (int[])(object)newValue;
-                            for (int i = 0; i < intArray.Count(); i++)
-                            {
-                                KernelMethods.WriteMemory(handle, location + (i * 4), BitConverter.GetBytes(intArray[i]));
-                            }
-                            return;
+                    switch (newValue) {
+                        case IntPtr v:
+                            bytesToWrite = BitConverter.GetBytes(v.ToInt64());
+                            break;
+                        case InlineMemoryArray<int> v:
+                            bytesToWrite = v.backing.SelectMany(x => BitConverter.GetBytes(x)).ToArray();                            
+                            break;
                         default:
                             throw new NotImplementedException("Invalid obj type");
                     }
